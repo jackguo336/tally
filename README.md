@@ -1,8 +1,6 @@
 # Tally
 
-Tally is a command line tool for tracking team scores during a fitness
-challenge. Fitness activities performed by users in a team are retrieved from
-Strava and daily score are assigned based on a point system. The point system is provided in the section below.
+Tally is a command line tool for tracking team scores during a fitness challenge. Fitness activities performed by users in a team are retrieved from Strava and daily score are assigned based on a point system. The point system is provided in the section below.
 
 ## Point System
 
@@ -84,3 +82,37 @@ A team is awareded 5 additional points for a given day if all users in the team 
 9. When asked to select a user list, choose the CSV file that was downloaded in the previous step.
 10. Next, select the `Track activities` option to track new activities since the start of the challenge. It is recommended to run this command every week since activities older than 2 weeks may not be displayed in the club activity feed.
 11. After activities have been tracked, select the `Calculate scores` option to calculate the team scores for the challenge. When prompted for the scoring end date, it is recommended to use yesterday's date since the scoring for today may be incomplete.
+
+## Local Development
+
+### Setup
+
+1. Cloen this repository
+2. Create a virtual environment with `python -m venv venv`
+3. Activate the virtual environment with `source venv/bin/activate`
+4. Install the dependencies with `pip install -r requirements.txt`
+5. Create an [editable install](https://setuptools.pypa.io/en/latest/userguide/development_mode.html) of the package with `pip install -e .`
+6. Run the tool with `python -m tally`
+
+### Project Structure
+
+```
+tally/
+├── src/
+│   ├── tally/
+│   │   ├── actions/                     # Each subdirectory represents a different operation performed by the tool
+│   │   │   ├── initialize/
+│   │   │   ├── reset/
+│   │   │   ├── score/
+│   │   │   │   ├── point_system.py      # Rules for calculating user and team points
+│   │   │   ├── track/
+│   │   ├── models/                      # Database ORM and schema validation models
+│   │   ├── services/
+│   │   │   ├── db.py                    # Database connection and operations
+│   │   ├── utils/                       # Common helper functions
+│   │   ├── cli.py                       # Entry point for the command line tool
+│   ├── scripts/                         # Automate the process of installing the command line tool
+│   ├── templates/                       # Defines the expected file format for input files to the command line tool
+│   ├── data/                            # Database storage for user, team and activity data
+│   ├── logs/                            # Debug logs for each execution of the tool
+```

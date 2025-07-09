@@ -1,0 +1,6 @@
+data/
+logs/
+venv/
+backups/
+build/
+*.egg-info/

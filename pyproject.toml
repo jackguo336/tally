@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tally"
+version = "0.1.0"
+description = "A fitness challenge score tracker application"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "questionary>=2.1.0",
+    "peewee>=3.18.0",
+    "pydantic>=2.0.0",
+    "selenium>=4.34.0",
+    "webdriver-manager>=4.0.2",
+    "pytz>=2025.2"
+]
+
+[project.scripts]
+tally = "tally.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["tally*"]

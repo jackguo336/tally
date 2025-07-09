@@ -4,3 +4,4 @@ venv/
 backups/
 build/
 *.egg-info/
+__pycache__/

@@ -38,7 +38,8 @@ A team is awareded 5 additional points for a given day if all users in the team 
   - Windows: Download from https://www.python.org/downloads/windows/
 - pipx
   - MacOS: install with `brew install pipx && pipx ensurepath`
-  - Windows: `python3 -m pip install --user pipx && .\pipx.exe ensurepath`
+  - Windows: `python3 -m pip install --user pipx; pipx ensurepath`
+    - If you get an error `pipx: command not found`, you may need to add your python Scripts folder (e.g. `C:\Users\<username>\AppData\Local\Programs\Python\<version>\Scripts`) to your system path.
 - tkinter
   - MacOS: install with `brew install python-tk`
   - Windows: should be included with the Python installation
@@ -51,6 +52,7 @@ A team is awareded 5 additional points for a given day if all users in the team 
 2. Install the command line tool
   a. MacOS: Run `chmod +x scripts/install.sh && scripts/install.sh`
   b. Windows: Run `scripts\install.ps1`
+    i. If you get an error `install.ps1 cannot be loaded because running scripts is disabled on this system`, run a PowerShell terminal as an administrator and enter `Set-ExecutionPolicy RemoteSigned`
 3. Run `tally` to start the tool
 
 ## How to use

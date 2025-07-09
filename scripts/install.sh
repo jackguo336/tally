@@ -1,7 +1,9 @@
 #! /bin/bash
 
-# Create virtual environment
-python3 -m venv ../venv
+# Create virtual environment if it doesn't exist
+if [ ! -d "../venv" ]; then
+    python3 -m venv ../venv
+fi
 
 # Use virtual environment
 source ../venv/bin/activate

@@ -45,7 +45,7 @@ A team is awareded 5 additional points for a given day if all users in the team 
 ### Steps
 
 1. Clone or download this repository
-2. Run `scripts/install.sh` to install the command line tool
+2. Run `chmod +x scripts/install.sh && scripts/install.sh` to install the command line tool
 3. Run `tally` to start the tool
 
 ## How to use

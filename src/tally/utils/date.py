@@ -40,3 +40,7 @@ def get_dates_between(
         dates.append(current_date)
         current_date += datetime.timedelta(days=1)
     return dates
+
+
+def get_file_timestamp() -> str:
+    return datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

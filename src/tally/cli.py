@@ -1,13 +1,13 @@
 import questionary
 import logging
 import sys
-import datetime
 from pathlib import Path
 
 from tally.actions.initialize.initialize import initialize
 from tally.actions.reset.reset import reset
 from tally.actions.track.track import track
 from tally.actions.score.score import score
+from tally.utils.date import get_file_timestamp
 
 
 def configure_logging():
@@ -19,8 +19,7 @@ def configure_logging():
     stdout_handler.setLevel(logging.ERROR)
 
     Path("logs").mkdir(exist_ok=True)
-    current_time = datetime.datetime.now().isoformat()
-    file_handler = logging.FileHandler(f"logs/tally_{current_time}.log")
+    file_handler = logging.FileHandler(f"logs/tally_{get_file_timestamp()}.log")
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.DEBUG)
 

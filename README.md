@@ -34,18 +34,23 @@ A team is awareded 5 additional points for a given day if all users in the team 
 ### Prerequisites
 
 - Python 3.10+
-  - Install with `brew install python`
+  - MacOS: install with `brew install python`
+  - Windows: Download from https://www.python.org/downloads/windows/
 - pipx
-  - Install with `brew install pipx && pipx ensurepath`
+  - MacOS: install with `brew install pipx && pipx ensurepath`
+  - Windows: `python3 -m pip install --user pipx && .\pipx.exe ensurepath`
 - tkinter
-  - Install with `brew install python-tk`
+  - MacOS: install with `brew install python-tk`
+  - Windows: should be included with the Python installation
 - Google Chrome
-  - Install from https://www.google.com/chrome/
+  - Download from https://www.google.com/chrome/
 
 ### Steps
 
 1. Clone or download this repository
-2. Run `chmod +x scripts/install.sh && scripts/install.sh` to install the command line tool
+2. Install the command line tool
+  a. MacOS: Run `chmod +x scripts/install.sh && scripts/install.sh`
+  b. Windows: Run `scripts\install.ps1`
 3. Run `tally` to start the tool
 
 ## How to use

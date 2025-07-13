@@ -18,28 +18,36 @@ from tally.actions.score.user_score import get_user_daily_score
 from tally.actions.score.team_score import get_team_daily_score, get_team_cumulative_score
 
 
-def prompt_date(message: str, default: datetime.date) -> datetime.date:
+def prompt_date(message: str, default: datetime.date) -> datetime.date | None:
     date = questionary.text(
         message,
         validate=date_validator,
         default=default.strftime("%Y-%m-%d"),
     ).ask()
+    if not date:
+        return None
+
     return datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
 
-def prompt_score_start_date(default_start_date: datetime.date) -> datetime.date:
-    return prompt_date(
+def prompt_score_config(config: Config) -> ScoreConfig | None:
+    default_start_date = config.start_date
+    start_date = prompt_date(
         "Enter the start date for the score calculation (YYYY-MM-DD)",
         default_start_date,
     )
+    if not start_date:
+        return None
 
-
-def prompt_score_end_date():
-    return prompt_date(
+    end_date = prompt_date(
         "Enter the end date for the score calculation (YYYY-MM-DD)",
         # Default to yesterday's date
         datetime.datetime.now() - datetime.timedelta(days=1),
     )
+    if not end_date:
+        return None
+
+    return ScoreConfig(start_date, end_date, config.time_zone)
 
 
 def score():
@@ -50,10 +58,10 @@ def score():
         )
         return
 
-    score_start_date = prompt_score_start_date(config.start_date)
-    score_end_date = prompt_score_end_date()
-
-    score_config = ScoreConfig(score_start_date, score_end_date, config.time_zone)
+    score_config = prompt_score_config(config)
+    if not score_config:
+        print("Score config is incomplete, cancelling operation")
+        return
 
     activities: List[Activity] = (
         Activity.select().join(User).join(Team).order_by(Activity.start_time.asc())

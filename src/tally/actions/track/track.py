@@ -35,6 +35,7 @@ def track():
 
     teams: List[Team] = Team.select()
     activities: List[Activity] = []
+    print("Please wait, a browser window is opening...")
     strava_service = StravaService()
     strava_service.login()
     for team in teams:

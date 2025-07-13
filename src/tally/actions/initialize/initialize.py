@@ -72,16 +72,6 @@ def prompt_config(existing_config: Config | None) -> Config | None:
     if not start_date:
         return None
 
-    end_date = questionary.text(
-        "Enter the end date of the challenge (in format YYYY-MM-DD, e.g. 2025-01-01)",
-        validate=date_validator,
-        default=(
-            existing_config.end_date.strftime("%Y-%m-%d") if existing_config else ""
-        ),
-    ).ask()
-    if not end_date:
-        return None
-
     time_zone = questionary.select(
         "Select a time zone. Daily scores will be calculated based on this time zone.",
         choices=common_timezones,
@@ -93,7 +83,6 @@ def prompt_config(existing_config: Config | None) -> Config | None:
     return Config(
         challenge_name=challenge_name,
         start_date=datetime.strptime(start_date, "%Y-%m-%d").date(),
-        end_date=datetime.strptime(end_date, "%Y-%m-%d").date(),
         time_zone=time_zone,
     )
 

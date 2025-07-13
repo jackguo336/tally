@@ -79,8 +79,8 @@ A team is awareded 5 additional points for a given day if all users in the team 
 ```
 
 8. Enter the name, start date and time zone for the challenge according to the prompts.
-9. When asked to select a user list, choose the CSV file that was downloaded in the previous step.
-10. Next, select the `Track activities` option to track new activities since the start of the challenge. It is recommended to run this command every week since activities older than 2 weeks may not be displayed in the club activity feed.
+9. When asked to select a user list, choose the CSV file that was downloaded in the previous step. Ensure that the selected CSV file is filled correctly. Partially filled rows will be skipped.
+10. Next, select the `Track activities` option to track new activities since the start of the challenge. It is recommended to run this command every week since activities older than 2 weeks may not be displayed in the club activity feed. Note that the number of saved activities may be less than the number of activities fetched from Strava as some activities may have occurred before the start of the challenge.
 11. After activities have been tracked, select the `Calculate scores` option to calculate the team scores for the challenge. When prompted for the scoring end date, it is recommended to use yesterday's date since the scoring for today may be incomplete.
 
 ## Local Development

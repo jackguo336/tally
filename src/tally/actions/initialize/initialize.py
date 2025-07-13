@@ -4,7 +4,7 @@ import questionary
 from pytz import common_timezones
 from datetime import datetime
 
-from tally.utils.date import date_validator
+from tally.utils.date import prompt_date
 from tally.actions.initialize.user_list import prompt_user_list, parse_user_list, UserRow
 from tally.actions.initialize.create_tables import create_tables
 from tally.models.config import Config
@@ -62,13 +62,10 @@ def prompt_config(existing_config: Config | None) -> Config | None:
     if not challenge_name:
         return None
 
-    start_date = questionary.text(
+    start_date = prompt_date(
         "Enter the start date of the challenge (in format YYYY-MM-DD, e.g. 2025-01-01)",
-        validate=date_validator,
-        default=(
-            existing_config.start_date.strftime("%Y-%m-%d") if existing_config else ""
-        ),
-    ).ask()
+        existing_config.start_date if existing_config else None
+    )
     if not start_date:
         return None
 
@@ -82,7 +79,7 @@ def prompt_config(existing_config: Config | None) -> Config | None:
 
     return Config(
         challenge_name=challenge_name,
-        start_date=datetime.strptime(start_date, "%Y-%m-%d").date(),
+        start_date=start_date,
         time_zone=time_zone,
     )
 

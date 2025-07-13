@@ -9,25 +9,13 @@ from tally.models.activity import Activity
 from tally.actions.score.score_config import ScoreConfig
 from tally.actions.score.save_score import save_team_cumulative_score_to_csv
 from tally.utils.date import (
-    date_validator,
+    prompt_date,
 )
 from tally.actions.score.user_active_time import (
     get_user_active_time,
 )
 from tally.actions.score.user_score import get_user_daily_score
 from tally.actions.score.team_score import get_team_daily_score, get_team_cumulative_score
-
-
-def prompt_date(message: str, default: datetime.date) -> datetime.date | None:
-    date = questionary.text(
-        message,
-        validate=date_validator,
-        default=default.strftime("%Y-%m-%d"),
-    ).ask()
-    if not date:
-        return None
-
-    return datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
 
 def prompt_score_config(config: Config) -> ScoreConfig | None:

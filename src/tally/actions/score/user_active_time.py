@@ -5,9 +5,7 @@ import pytz
 from tally.models.user import User
 from tally.models.activity import Activity
 from tally.actions.score.score_config import ScoreConfig
-
-
-MOVING_TIME_ACTIVITY_TYPES = ["Walk", "Run", "EBikeRide", "Ride", "Hike"]
+from tally.utils.activity import get_activity_active_seconds
 
 
 class UserActiveTime:
@@ -17,13 +15,7 @@ class UserActiveTime:
         self.active_seconds = active_seconds
 
     def add_activity(self, activity: Activity):
-        if (
-            activity.workout_type in MOVING_TIME_ACTIVITY_TYPES
-            and activity.moving_seconds is not None
-        ):
-            self.active_seconds += activity.moving_seconds
-        else:
-            self.active_seconds += activity.elapsed_seconds
+        self.active_seconds += get_activity_active_seconds(activity)
 
     def __str__(self):
         return (

@@ -75,6 +75,7 @@ A team is awareded 5 additional points for a given day if all users in the team 
    Track activities
    Calculate scores
    Delete all data
+   Export activity data
    Exit
 ```
 

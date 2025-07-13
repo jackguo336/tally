@@ -5,7 +5,11 @@ from pytz import common_timezones
 from datetime import datetime
 
 from tally.utils.date import prompt_date
-from tally.actions.initialize.user_list import prompt_user_list, parse_user_list, UserRow
+from tally.actions.initialize.user_list import (
+    prompt_user_list,
+    parse_user_list,
+    UserRow,
+)
 from tally.actions.initialize.create_tables import create_tables
 from tally.models.config import Config
 from tally.models.user import User
@@ -64,7 +68,7 @@ def prompt_config(existing_config: Config | None) -> Config | None:
 
     start_date = prompt_date(
         "Enter the start date of the challenge (in format YYYY-MM-DD, e.g. 2025-01-01)",
-        existing_config.start_date if existing_config else None
+        existing_config.start_date if existing_config else None,
     )
     if not start_date:
         return None

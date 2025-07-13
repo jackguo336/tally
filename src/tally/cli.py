@@ -7,6 +7,7 @@ from tally.actions.initialize.initialize import initialize
 from tally.actions.reset.reset import reset
 from tally.actions.track.track import track
 from tally.actions.score.score import score
+from tally.actions.export.export import export
 from tally.utils.date import get_file_timestamp
 
 
@@ -23,10 +24,7 @@ def configure_logging():
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.DEBUG)
 
-    logging.basicConfig(
-        level=logging.DEBUG,
-        handlers=[stdout_handler, file_handler]
-    )
+    logging.basicConfig(level=logging.DEBUG, handlers=[stdout_handler, file_handler])
 
 
 actions = {
@@ -34,6 +32,7 @@ actions = {
     "track": "Track activities",
     "score": "Calculate scores",
     "reset": "Delete all data",
+    "export": "Export activity data",
     "exit": "Exit",
 }
 
@@ -61,6 +60,8 @@ def app():
             score()
         elif action == actions["reset"]:
             reset()
+        elif action == actions["export"]:
+            export()
         elif action == actions["exit"] or not action:
             break
 

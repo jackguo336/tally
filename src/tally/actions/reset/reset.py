@@ -15,7 +15,7 @@ def reset():
     if not is_confirm_reset:
         print("Operation cancelled")
         return
-    
+
     backup_db()
 
     User.delete().execute()

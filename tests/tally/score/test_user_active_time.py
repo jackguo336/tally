@@ -2,8 +2,8 @@ import datetime
 
 from tally.actions.score.user_active_time import (
     get_user_active_time,
-    MOVING_TIME_ACTIVITY_TYPES,
 )
+from tally.utils.activity import MOVING_TIME_ACTIVITY_TYPES
 from tally.actions.score.score_config import ScoreConfig
 
 

@@ -15,7 +15,10 @@ from tally.actions.score.user_active_time import (
     get_user_active_time,
 )
 from tally.actions.score.user_score import get_user_daily_score
-from tally.actions.score.team_score import get_team_daily_score, get_team_cumulative_score
+from tally.actions.score.team_score import (
+    get_team_daily_score,
+    get_team_cumulative_score,
+)
 
 
 def prompt_score_config(config: Config) -> ScoreConfig | None:

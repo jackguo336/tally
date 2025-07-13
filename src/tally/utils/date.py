@@ -1,7 +1,11 @@
 import datetime
-from typing import List
 import pytz
 import questionary
+import re
+
+
+ONE_HOUR_IN_SECONDS = 3600
+ONE_MINUTE_IN_SECONDS = 60
 
 
 def date_validator(date: str) -> str | bool:
@@ -44,11 +48,24 @@ def get_local_date(date: datetime.date, time_zone: str) -> datetime.date:
 
 
 def format_duration(seconds: int) -> str:
-    one_hour_in_seconds = 3600
-    one_minute_in_seconds = 60
-    hours = seconds // one_hour_in_seconds
-    minutes = (seconds % one_hour_in_seconds) // one_minute_in_seconds
+    hours = seconds // ONE_HOUR_IN_SECONDS
+    minutes = (seconds % ONE_HOUR_IN_SECONDS) // ONE_MINUTE_IN_SECONDS
     if hours > 0:
         return f"{hours}h {minutes}m"
     else:
         return f"{minutes}m"
+
+
+def parse_duration(duration: str) -> int:
+    """
+    Converts a duration string in the format "1h 15m" to seconds.
+    """
+
+    duration_regex = r"(?:(\d+)\s*h\s*)?(\d+)\s*m"
+    match = re.search(duration_regex, duration.strip())
+    if match:
+        hours = int(match.group(1)) if match.group(1) else 0
+        minutes = int(match.group(2))
+        return hours * ONE_HOUR_IN_SECONDS + minutes * ONE_MINUTE_IN_SECONDS
+    else:
+        raise ValueError(f"Invalid duration format: {duration}")

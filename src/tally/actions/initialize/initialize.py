@@ -2,11 +2,9 @@ from typing import List
 import logging
 import questionary
 from pytz import common_timezones
-from datetime import datetime
 
 from tally.utils.date import prompt_date
 from tally.actions.initialize.user_list import (
-    prompt_user_list,
     parse_user_list,
     UserRow,
 )
@@ -15,6 +13,7 @@ from tally.models.config import Config
 from tally.models.user import User
 from tally.models.team import Team
 from tally.services.db import backup_db
+from tally.utils.file import prompt_select_file, FileType
 
 
 logger = logging.getLogger(__name__)
@@ -100,7 +99,8 @@ def initialize():
     config.save()
     logger.debug(f"Created {config}")
 
-    user_list_path = prompt_user_list()
+    print("Use the pop-up file explorer to select the user list for the challenge")
+    user_list_path = prompt_select_file("user table", [FileType.csv])
     if not user_list_path:
         print("No file selected, cancelling operation")
         return
@@ -111,9 +111,9 @@ def initialize():
         print(f"Failed to read user table\n{e}")
         return
 
-    teams = create_teams(user_list)
-    users = create_users(user_list)
+    team_ids = create_teams(user_list)
+    user_ids = create_users(user_list)
 
-    print(f"Created {len(teams)} team(s) and {len(users)} user(s)")
+    print(f"Created {len(team_ids)} team(s) and {len(user_ids)} user(s)")
 
     backup_db()

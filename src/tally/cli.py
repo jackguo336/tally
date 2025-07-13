@@ -8,6 +8,7 @@ from tally.actions.reset.reset import reset
 from tally.actions.track.track import track
 from tally.actions.score.score import score
 from tally.actions.export.export import export
+from tally.actions.load.load import load
 from tally.utils.date import get_file_timestamp
 
 
@@ -33,6 +34,7 @@ actions = {
     "score": "Calculate scores",
     "reset": "Delete all data",
     "export": "Export activity data",
+    "load": "Import activity data",
     "exit": "Exit",
 }
 
@@ -62,6 +64,8 @@ def app():
             reset()
         elif action == actions["export"]:
             export()
+        elif action == actions["load"]:
+            load()
         elif action == actions["exit"] or not action:
             break
 

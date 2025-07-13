@@ -48,7 +48,11 @@ def track():
         # Drop activities that occurred before the challenge started
         if activity.start_time < challenge_start_time:
             continue
-        Activity.replace(**activity.__data__).execute()
+
+        # Do not overwrite existing activities in DB to prevent edits made by
+        # the user and imported using the load action from being lost
+        Activity.insert(**activity.__data__).on_conflict(action="IGNORE")
+
         logger.debug(f"Saved {activity}")
         saved_activity_count += 1
 

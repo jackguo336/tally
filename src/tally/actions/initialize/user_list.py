@@ -5,26 +5,6 @@ from pydantic import BaseModel
 import csv
 
 
-def prompt_user_list() -> str:
-    print("Use the pop-up file explorer to select the user list for the challenge")
-
-    root = tkinter.Tk()
-    # Prevents the tkinter window from appearing
-    root.withdraw()
-
-    path = filedialog.askopenfilename(
-        title="Select the user table",
-        filetypes=[("CSV files", "*.csv")],
-    )
-
-    root.destroy()
-
-    if path:
-        print(f"Selected file: {path}")
-
-    return path
-
-
 class UserRow(BaseModel):
     team_id: str
     team_name: str
@@ -44,6 +24,8 @@ class UserRow(BaseModel):
 
 
 def parse_user_list(user_list_path: str) -> List[UserRow]:
+    skipped_row_count = 0
+
     with open(user_list_path, "r") as file:
         reader = csv.DictReader(file)
         user_rows = []
@@ -51,7 +33,11 @@ def parse_user_list(user_list_path: str) -> List[UserRow]:
             user_row = UserRow(**row)
             if user_row.is_incomplete():
                 print(f"Skipping incomplete row {row}")
+                skipped_row_count += 1
                 continue
             user_rows.append(user_row)
 
+        print(
+            f"Parsed {len(user_rows)} user rows. Skipped {skipped_row_count} incomplete rows."
+        )
         return user_rows

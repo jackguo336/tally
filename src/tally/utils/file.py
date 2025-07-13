@@ -1,6 +1,10 @@
 import tkinter
 from tkinter import filedialog
-from typing import TextIO
+from typing import List, TextIO, Tuple
+
+
+class FileType:
+    csv = ("CSV files", "*.csv")
 
 
 def prompt_save_file(
@@ -21,3 +25,23 @@ def prompt_save_file(
     root.destroy()
 
     return file
+
+
+def prompt_select_file(
+    file_description: str, file_types: List[Tuple[str, str]]
+) -> str | None:
+    root = tkinter.Tk()
+    # Prevents the tkinter window from appearing
+    root.withdraw()
+
+    path = filedialog.askopenfilename(
+        title=f"Select the {file_description}",
+        filetypes=file_types,
+    )
+
+    root.destroy()
+
+    if path:
+        print(f"Selected file: {path}")
+
+    return path

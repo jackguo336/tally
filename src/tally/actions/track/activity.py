@@ -61,6 +61,7 @@ def get_activities_from_feed(feed: FeedResponse) -> List[Activity]:
                     workout_type=activity.type,
                 )
             )
+
     return activities
 
 

@@ -7,6 +7,7 @@ from tally.utils.activity import get_activity_link, get_activity_active_seconds
 from tally.utils.file import prompt_save_file
 from tally.utils.date import format_duration, get_file_timestamp, get_local_date
 from tally.models.config import Config
+from tally.utils.user import get_user_link
 
 
 def save_activities(activities: List[Activity], config: Config):
@@ -18,12 +19,21 @@ def save_activities(activities: List[Activity], config: Config):
     with open(file, "w") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["Link", "User", "Title", "Workout Type", "Date", "Active Time"]
+            [
+                "link",
+                "user_link",
+                "user",
+                "title",
+                "workout_type",
+                "date",
+                "active_time",
+            ]
         )
         for activity in activities:
             writer.writerow(
                 [
                     get_activity_link(activity),
+                    get_user_link(activity.user),
                     activity.user.name,
                     activity.title,
                     activity.workout_type,

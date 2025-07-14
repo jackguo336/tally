@@ -51,7 +51,7 @@ def track():
 
         # Do not overwrite existing activities in DB to prevent edits made by
         # the user and imported using the load action from being lost
-        Activity.insert(**activity.__data__).on_conflict(action="IGNORE")
+        Activity.insert(**activity.__data__).on_conflict_ignore().execute()
 
         logger.debug(f"Saved {activity}")
         saved_activity_count += 1

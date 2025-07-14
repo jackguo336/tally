@@ -17,6 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 class StravaService:
+    """
+    The StravaService uses Selenium to fetch data from Strava instead of using
+    the `requests` library. This methods avoids the use of API keys and is able
+    to obtain more detailed activity data compared with the Strava API. It
+    requires the user to manually log in to Strava each time this service is
+    created.
+    """
+
     def __init__(self):
         self.driver: webdriver.Chrome = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()), options=Options()

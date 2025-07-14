@@ -67,7 +67,7 @@ A team is awareded 5 additional points for a given day if all users in the team 
 
 5. Download the spreadsheet as a CSV file.
 6. Run `tally` to start the tool.
-7. When prompted, selected the `Configure challenge` option to configure a new challenge.
+7. When prompted, select the `Configure challenge` option to configure a new challenge.
 
 ```
 ? Select an operation (Use arrow keys)
@@ -76,6 +76,7 @@ A team is awareded 5 additional points for a given day if all users in the team 
    Calculate scores
    Delete all data
    Export activity data
+   Import activity data
    Exit
 ```
 
@@ -83,6 +84,23 @@ A team is awareded 5 additional points for a given day if all users in the team 
 9. When asked to select a user list, choose the CSV file that was downloaded in the previous step. Ensure that the selected CSV file is filled correctly. Partially filled rows will be skipped.
 10. Next, select the `Track activities` option to track new activities since the start of the challenge. It is recommended to run this command every week since activities older than 2 weeks may not be displayed in the club activity feed. Note that the number of saved activities may be less than the number of activities fetched from Strava as some activities may have occurred before the start of the challenge.
 11. After activities have been tracked, select the `Calculate scores` option to calculate the team scores for the challenge. When prompted for the scoring end date, it is recommended to use yesterday's date since the scoring for today may be incomplete.
+
+### Reviewing and Updating Activities
+
+1. To view the list of tracked activities for all users, run `tally` and select the `Export activity data` option.
+2. Upload the exported CSV file to a shared spreadsheet to users can review the activities.
+3. Create a form to allow users to submit updates to their activities. The form should contain fields for the columns `link`, `user_link`, `title`, `workout_type`, `date`, and `active_time`. Users should copy over values from the exported activity list while filling the form. Note that date must be in the format `YYYY-MM-DD` and active time must be in the format similar to `1h 15m` or `45m`.
+4. When activity updates have been submitted, the form should output a spreadsheet similar to the following:
+
+| link | user_link | title | workout_type | date | active_time |
+|------|-----------|-------|--------------|------|-------------|
+| https://www.strava.com/activities/153453453 | https://www.strava.com/athletes/34234 | Afternoon Run | Run | 2025-07-01 | 1h 15m |
+| https://www.strava.com/activities/534834912 | https://www.strava.com/athletes/45343 | Night Run | Run | 2025-07-02 | 45m |
+
+5. Download the spreadsheet as a CSV file.
+6. Run `tally` to start the tool.
+7. When prompted, select the `Import activity data` option to import the activity updates.
+8. When prompted, select the CSV file that was downloaded in the previous step.
 
 ## Local Development
 
@@ -102,7 +120,9 @@ tally/
 ├── src/
 │   ├── tally/
 │   │   ├── actions/                     # Each subdirectory represents a different operation performed by the tool
+│   │   │   ├── export/
 │   │   │   ├── initialize/
+│   │   │   ├── load/
 │   │   │   ├── reset/
 │   │   │   ├── score/
 │   │   │   │   ├── point_system.py      # Rules for calculating user and team points
@@ -110,8 +130,10 @@ tally/
 │   │   ├── models/                      # Database ORM and schema validation models
 │   │   ├── services/
 │   │   │   ├── db.py                    # Database connection and operations
+│   │   │   ├── strava.py                # Connects with Strava to fetch user activities
 │   │   ├── utils/                       # Common helper functions
 │   │   ├── cli.py                       # Entry point for the command line tool
+│   ├── tests/                           # Unit tests for the tool
 │   ├── scripts/                         # Automate the process of installing the command line tool
 │   ├── templates/                       # Defines the expected file format for input files to the command line tool
 │   ├── data/                            # Database storage for user, team and activity data

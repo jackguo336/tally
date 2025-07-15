@@ -31,8 +31,8 @@ A team is awareded 5 additional points for a given day if all users in the team 
 
 1. Go to the [releases](https://github.com/titanjack36/tally/releases) page.
 2. Download the zipped executable under the Assets section.
-  a. MacOS: click on the `tally-macos-<version>.zip` file
-  b. Windows: click on the `tally-windows-<version>.zip` file
+    1. MacOS: click on the `tally-macos-<version>.zip` file
+    2. Windows: click on the `tally-windows-<version>.zip` file
 3. Unzip the contents `.zip` file into a folder.
 4. Click on the `tally` executable to start the tool.
 
@@ -90,17 +90,17 @@ A team is awareded 5 additional points for a given day if all users in the team 
 ### Prerequisites
 
 - Python 3.10+
-  - MacOS: install with `brew install python`
-  - Windows: Download from https://www.python.org/downloads/windows/
+    - MacOS: install with `brew install python`
+    - Windows: Download from https://www.python.org/downloads/windows/
 - pipx
-  - MacOS: install with `brew install pipx && pipx ensurepath`
-  - Windows: `python3 -m pip install --user pipx; pipx ensurepath`
-    - If you get an error `pipx: command not found`, you may need to add your python Scripts folder (e.g. `C:\Users\<username>\AppData\Local\Programs\Python\<version>\Scripts`) to your system path.
+    - MacOS: install with `brew install pipx && pipx ensurepath`
+    - Windows: `python3 -m pip install --user pipx; pipx ensurepath`
+        - If you get an error `pipx: command not found`, you may need to add your python Scripts folder (e.g. `C:\Users\<username>\AppData\Local\Programs\Python\<version>\Scripts`) to your system path.
 - tkinter
-  - MacOS: install with `brew install python-tk`
-  - Windows: should be included with the Python installation
+    - MacOS: install with `brew install python-tk`
+    - Windows: should be included with the Python installation
 - Google Chrome (used by Selenium to automate fetching from Strava)
-  - Download from https://www.google.com/chrome/
+    - Download from https://www.google.com/chrome/
 
 ### Setup
 
@@ -115,17 +115,17 @@ A team is awareded 5 additional points for a given day if all users in the team 
 
 1. Clone or download this repository
 2. Install the command line tool
-  a. MacOS: Run `chmod +x scripts/install.sh && scripts/install.sh`
-  b. Windows: Run `scripts\install.ps1`
-    i. If you get an error `install.ps1 cannot be loaded because running scripts is disabled on this system`, run a PowerShell terminal as an administrator and enter `Set-ExecutionPolicy RemoteSigned`
+    1. MacOS: Run `chmod +x scripts/install.sh && scripts/install.sh`
+    2. Windows: Run `scripts\install.ps1`
+        1. If you get an error `install.ps1 cannot be loaded because running scripts is disabled on this system`, run a PowerShell terminal as an administrator and enter `Set-ExecutionPolicy RemoteSigned`
 3. Run `tally` to start the tool
 
 ### Building an Executable
 
 1. Run the build script
-  a. MacOS: Run `chmod +x scripts/build.sh && scripts/build.sh`
-  b. Windows: Run `scripts\build.ps1`
-    i. If you get an error `build.ps1 cannot be loaded because running scripts is disabled on this system`, run a PowerShell terminal as an administrator and enter `Set-ExecutionPolicy RemoteSigned`
+    1. MacOS: Run `chmod +x scripts/build.sh && scripts/build.sh`
+    2. Windows: Run `scripts\build.ps1`
+        1. If you get an error `build.ps1 cannot be loaded because running scripts is disabled on this system`, run a PowerShell terminal as an administrator and enter `Set-ExecutionPolicy RemoteSigned`
 2. The executable will be saved in the `dist/tally` directory. When distributing the executable, keep the `_internal` folder and `tally` executable together.
 
 ### Project Structure

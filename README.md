@@ -128,6 +128,21 @@ A team is awareded 5 additional points for a given day if all users in the team 
         1. If you get an error `build.ps1 cannot be loaded because running scripts is disabled on this system`, run a PowerShell terminal as an administrator and enter `Set-ExecutionPolicy RemoteSigned`
 2. The executable will be saved in the `dist/tally` directory. When distributing the executable, keep the `_internal` folder and `tally` executable together.
 
+### Running Tests
+
+To run all test cases, use:
+
+```bash
+$ python -m pytest
+```
+
+To run a specific test case, use:
+
+```bash
+$ python -m pytest <path_to_test_file>::<test_class>::<test_method>
+# e.g. python -m pytest tests/tally/score/test_user_active_time.py::TestGetUserActiveTime::test_timezone_conversion_america_los_angeles_boundary
+```
+
 ### Project Structure
 
 ```

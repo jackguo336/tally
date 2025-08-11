@@ -2,11 +2,10 @@ from typing import List
 import csv
 import datetime
 
-from tally.models.activity import Activity
+from tally.models.db import Activity, Config
 from tally.utils.activity import get_activity_link, get_activity_active_seconds
 from tally.utils.file import prompt_save_file
 from tally.utils.date import format_duration, get_file_timestamp, get_local_date
-from tally.models.config import Config
 from tally.utils.user import get_user_link
 
 

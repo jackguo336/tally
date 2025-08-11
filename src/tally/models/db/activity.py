@@ -1,7 +1,7 @@
 from peewee import CharField, ForeignKeyField, DateTimeField, IntegerField
 
-from tally.models.base import BaseModel
-from tally.models.user import User
+from .base import BaseModel
+from .user import User
 
 
 class Activity(BaseModel):

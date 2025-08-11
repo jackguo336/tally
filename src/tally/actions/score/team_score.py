@@ -1,8 +1,7 @@
 from typing import List, Tuple, Optional
 import datetime
 
-from tally.models.team import Team
-from tally.models.user import User
+from tally.models.db import Team, User
 from tally.actions.score.user_score import UserDailyScore
 from tally.actions.score.point_system import calculate_team_bonus_points
 

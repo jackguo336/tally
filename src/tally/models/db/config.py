@@ -1,6 +1,6 @@
 from peewee import CharField, DateField
 
-from tally.models.base import BaseModel
+from .base import BaseModel
 
 
 class Config(BaseModel):

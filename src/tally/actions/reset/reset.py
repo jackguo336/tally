@@ -1,10 +1,7 @@
 import questionary
 
-from tally.models.user import User
-from tally.models.team import Team
-from tally.models.config import Config
-from tally.models.activity import Activity
-from tally.services.db import backup_db
+from tally.services.db import db, backup_db
+from tally.models.db import ALL_MODELS
 
 
 def reset():
@@ -18,9 +15,6 @@ def reset():
 
     backup_db()
 
-    User.delete().execute()
-    Team.delete().execute()
-    Activity.delete().execute()
-    Config.delete().execute()
+    db.drop_tables(ALL_MODELS)
 
     print("All data deleted")

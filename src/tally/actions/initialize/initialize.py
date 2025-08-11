@@ -9,9 +9,7 @@ from tally.actions.initialize.user_list import (
     UserRow,
 )
 from tally.actions.initialize.create_tables import create_tables
-from tally.models.config import Config
-from tally.models.user import User
-from tally.models.team import Team
+from tally.models.db import Config, User, Team
 from tally.services.db import backup_db
 from tally.utils.file import prompt_select_file, FileType
 

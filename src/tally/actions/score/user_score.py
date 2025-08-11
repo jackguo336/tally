@@ -1,7 +1,7 @@
 from typing import List, Tuple
 import datetime
 
-from tally.models.user import User
+from tally.models.db import User
 from tally.actions.score.user_active_time import UserActiveTime
 from tally.utils.date import get_previous_day
 from tally.actions.score.point_system import (

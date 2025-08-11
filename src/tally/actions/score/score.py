@@ -2,10 +2,7 @@ from typing import List
 import questionary
 import datetime
 
-from tally.models.config import Config
-from tally.models.team import Team
-from tally.models.user import User
-from tally.models.activity import Activity
+from tally.models.db import Config, Team, User, Activity
 from tally.actions.score.score_config import ScoreConfig
 from tally.actions.score.save_score import save_team_cumulative_score_to_csv
 from tally.utils.date import (

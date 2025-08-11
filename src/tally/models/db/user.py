@@ -1,7 +1,7 @@
 from peewee import CharField, ForeignKeyField
 
-from tally.models.base import BaseModel
-from tally.models.team import Team
+from .base import BaseModel
+from .team import Team
 
 
 class User(BaseModel):

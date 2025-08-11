@@ -1,8 +1,6 @@
 from typing import List
 
-from tally.models.activity import Activity
-from tally.models.user import User
-from tally.models.config import Config
+from tally.models.db import Activity, User, Config
 from tally.actions.export.save_activity import save_activities
 
 

@@ -5,8 +5,8 @@ import re
 import time
 
 from tally.services.strava import StravaService
-from tally.models.activity import Activity
-from tally.models.club_feed import (
+from tally.models.db import Activity
+from tally.models.validation.club_feed import (
     FeedEntryMultipleActivities,
     FeedResponse,
     ActivityStatsEntry,

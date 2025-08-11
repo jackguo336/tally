@@ -1,4 +1,4 @@
-from tally.models.activity import Activity
+from tally.models.db import Activity
 
 
 MOVING_TIME_ACTIVITY_TYPES = ["Walk", "Run", "EBikeRide", "Ride", "Hike"]

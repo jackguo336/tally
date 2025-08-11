@@ -1,6 +1,6 @@
 from peewee import CharField
 
-from tally.models.base import BaseModel
+from .base import BaseModel
 
 
 class Team(BaseModel):

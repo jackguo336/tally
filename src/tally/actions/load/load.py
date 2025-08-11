@@ -5,9 +5,8 @@ import datetime
 from tally.services.db import backup_db
 from tally.utils.file import prompt_select_file, FileType
 from tally.actions.load.activity_list import parse_activity_list, ActivityRow
-from tally.models.activity import Activity
+from tally.models.db import Activity, Config
 from tally.utils.date import get_start_of_day
-from tally.models.config import Config
 
 
 logger = logging.getLogger(__name__)

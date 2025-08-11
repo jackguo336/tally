@@ -1,4 +1,4 @@
-from tally.models.user import User
+from tally.models.db import User
 
 
 def get_user_link(user: User) -> str:

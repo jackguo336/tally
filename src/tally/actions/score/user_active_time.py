@@ -2,8 +2,7 @@ import datetime
 from typing import List, Tuple
 import pytz
 
-from tally.models.user import User
-from tally.models.activity import Activity
+from tally.models.db import Activity, User
 from tally.actions.score.score_config import ScoreConfig
 from tally.utils.activity import get_activity_active_seconds
 

@@ -2,9 +2,7 @@ import logging
 from typing import List
 import datetime
 
-from tally.models.config import Config
-from tally.models.team import Team
-from tally.models.activity import Activity
+from tally.models.db import Config, Team, Activity
 from tally.actions.track.activity import get_activities
 from tally.services.strava import StravaService
 from tally.utils.date import get_start_of_day

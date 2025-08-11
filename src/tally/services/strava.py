@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from urllib.parse import urlencode
 
-from tally.models.club_feed import FeedResponse
+from tally.models.validation.club_feed import FeedResponse
 
 
 logger = logging.getLogger(__name__)

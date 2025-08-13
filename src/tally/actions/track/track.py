@@ -38,7 +38,7 @@ def track():
     strava_service.login()
     for team in teams:
         print(f"Fetching activities for team {team.id}")
-        activities.extend(get_activities(strava_service, team.id, last_tracked_time))
+        activities.extend(get_activities(strava_service, team, last_tracked_time))
         print(f"Fetched {len(activities)} activities for team {team.id}")
 
     saved_activity_count = 0

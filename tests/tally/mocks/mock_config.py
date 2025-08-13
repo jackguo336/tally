@@ -11,5 +11,5 @@ def create_config(
     return Config(
         challenge_name=challenge_name or "Test Challenge",
         start_date=start_date or date.today().isoformat(),
-        time_zone=time_zone or "UTC"
+        time_zone=time_zone or "UTC",
     )

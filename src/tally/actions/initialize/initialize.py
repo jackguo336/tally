@@ -94,6 +94,9 @@ def initialize():
         print("Config is incomplete, cancelling operation")
         return
 
+    # Delete existing config entries so the config that is fetched is always the
+    # latest one
+    Config.delete().execute()
     config.save()
     logger.debug(f"Created {config}")
 

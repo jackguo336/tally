@@ -34,12 +34,18 @@ def get_user_daily_score(
     user_daily_scores: List[UserDailyScore] = []
     user_streak_map = dict[Tuple[str, datetime.date], int]()
 
-    for active_time_entry in user_active_times:
+    # Dates must be in increasing order since calculation relies on knowing the
+    # previous day's streak
+    sorted_active_times = sorted(user_active_times, key=lambda x: (x.user.id, x.date))
+
+    for active_time_entry in sorted_active_times:
         points = calculate_user_points(active_time_entry.active_seconds)
         prev_day_date = get_previous_day(active_time_entry.date)
         prev_streak = user_streak_map.get((active_time_entry.user.id, prev_day_date), 0)
         streak = prev_streak + 1 if active_time_entry.active_seconds > 0 else 0
         bonus_points = calculate_user_bonus_points(streak)
+
+        user_streak_map[(active_time_entry.user.id, active_time_entry.date)] = streak
 
         user_daily_scores.append(
             UserDailyScore(

@@ -45,12 +45,12 @@ def calculate_user_bonus_points(streak: int) -> int:
 def calculate_team_bonus_points(active_user_count: int, total_user_count: int) -> int:
     """
     Reward teams with 5 bonus points if all users in the team have been active
-    for a specific day.
+    for a specific day. Teams with no members do not receive bonus points.
 
-    :param team_points_for_date: List of points for each user in the team on a
-        specific day.
+    :param active_user_count: Number of active users in the team.
+    :param total_user_count: Total number of users in the team.
 
     :return: Bonus points for the team.
     """
     bonus_points = 5
-    return bonus_points if active_user_count == total_user_count else 0
+    return bonus_points if total_user_count > 0 and active_user_count == total_user_count else 0

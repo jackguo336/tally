@@ -1,0 +1,210 @@
+---
+description: Guidelines for writing unit tests in the Tally project
+globs: ["tests/**/*.py"]
+alwaysApply: false
+---
+
+# Unit Testing Guidelines for Tally
+
+## Test File Organization
+
+Organize test files by action modules to mirror the source code structure:
+
+```
+tests/tally/
+├── export/          # Tests for export actions
+├── initialize/      # Tests for initialize actions  
+├── load/           # Tests for load actions
+├── reset/          # Tests for reset actions
+├── score/          # Tests for score actions
+├── track/          # Tests for track actions
+└── mocks/          # Mock data creation utilities
+```
+
+## Test File Naming
+
+- Test files should be named `test_<module_name>.py`
+- Test classes should be named `Test<FunctionName>` (PascalCase)
+- Test methods should be named `test_<descriptive_name>` (snake_case)
+
+Example:
+```python
+# File: tests/tally/score/test_calculate_user_points.py
+class TestCalculateUserPoints:
+    def test_zero_active_time_returns_zero_points(self):
+        """Test that zero active time results in zero points"""
+```
+
+## Database Testing with mock_db
+
+For tests that perform database operations, include the `mock_db` fixture from `tests.tally.mocks.mock_db`:
+
+```python
+from tests.tally.mocks.mock_db import mock_db
+
+def test_database_operation(self, mock_db):
+    """Test description"""
+    # Test implementation using in-memory SQLite database
+```
+
+## Test Fixtures for Shared Setup
+
+If multiple test cases require the same set of entities, create a test fixture in the same file:
+
+```python
+@pytest.fixture
+def init_users_and_teams(mock_db):
+    """Create test users and teams for database tests"""
+    team = create_team(id="team1", name="Test Team")
+    team.save(force_insert=True)
+    create_user(id="user1", name="Test User", team=team.id).save(force_insert=True)
+    create_user(id="user2", name="Test User 2", team=team.id).save(force_insert=True)
+    yield
+
+class TestSomeFunction:
+    def test_with_users_and_teams(self, mock_db, init_users_and_teams):
+        """Test that uses the shared fixture"""
+        # Test implementation
+```
+
+## Mock Entity Creation
+
+Use mock creation functions from `tests/tally/mocks/` for creating test data:
+
+### Existing Mock Functions
+- `create_activity()` - Creates Activity instances
+- `create_user()` - Creates User instances  
+- `create_team()` - Creates Team instances
+- `create_config()` - Creates Config instances
+
+### Creating New Mock Functions
+
+If a mock method doesn't exist for an entity, create it in the appropriate file in `tests/tally/mocks/`:
+
+```python
+# File: tests/tally/mocks/mock_<entity>.py
+from uuid import uuid4
+from datetime import datetime, timezone
+from tally.models.db import EntityModel
+
+def create_entity(
+    id: str | None = None,
+    name: str | None = None,
+    optional_field: str | None = None,
+    required_field: str | None = None,
+):
+    """Create a mock entity with sensible defaults"""
+    return EntityModel(
+        id=id or str(uuid4()),
+        name=name or "Test Entity",
+        optional_field=optional_field,  # Can be None
+        required_field=required_field or "default_value",
+    )
+```
+
+**Key Requirements for Mock Functions:**
+- Always specify optional parameters with `| None` type hints
+- Include default values for all parameters using `or` operator
+- Use `uuid4()` for generating unique IDs
+- Use descriptive default values (e.g., "Test Activity", "Test User")
+- Include docstrings explaining the purpose
+
+## Test Structure and Patterns
+
+### Test Class Organization
+```python
+import pytest
+from module_under_test import function_to_test
+from tests.tally.mocks.mock_db import mock_db
+from tests.tally.mocks.mock_entity import create_entity
+
+class TestFunctionName:
+    """Test cases for function_name."""
+    
+    def test_edge_case_scenario(self):
+        """Test edge cases that don't require database"""
+        
+    def test_database_operation(self, mock_db):
+        """Test database operations with mock_db fixture"""
+        
+    def test_complex_scenario(self, mock_db, shared_fixture):
+        """Test using both mock_db and custom fixtures"""
+        
+    @pytest.mark.parametrize("input,expected", [
+        (value1, expected1),
+        (value2, expected2),
+    ])
+    def test_parametrized_cases(self, input, expected):
+        """Test multiple scenarios using parametrization"""
+```
+
+### Test Coverage Guidelines
+
+Ensure comprehensive test coverage by including:
+
+1. **Edge Cases**: Zero values, empty collections, None values
+2. **Boundary Conditions**: Min/max values, threshold boundaries  
+3. **Happy Path**: Normal expected usage scenarios
+4. **Error Cases**: Invalid inputs, exception handling
+5. **Database Operations**: CRUD operations, constraints, relationships
+
+### Assertions and Error Messages
+
+Use descriptive assertion messages:
+
+```python
+assert result == expected, f"Expected {expected}, got {result} for input {input}"
+assert len(results) == 3, f"Expected 3 results, got {len(results)}"
+```
+
+### Test Documentation
+
+- Include docstrings for all test methods explaining what is being tested
+- Use descriptive test method names that explain the scenario
+- Group related tests in the same test class
+- Add comments for complex test setup or assertions
+
+## Example Complete Test File
+
+```python
+import pytest
+from datetime import date
+from tally.actions.score.user_score import get_user_daily_score
+from tally.actions.score.user_active_time import UserActiveTime
+from tests.tally.mocks.mock_db import mock_db
+from tests.tally.mocks.mock_user import create_user
+from tests.tally.mocks.mock_team import create_team
+
+@pytest.fixture
+def init_test_data(mock_db):
+    """Create test users and teams"""
+    team = create_team(id="team1", name="Test Team")
+    team.save(force_insert=True)
+    create_user(id="user1", name="Test User", team=team.id).save(force_insert=True)
+    yield
+
+class TestGetUserDailyScore:
+    """Test cases for get_user_daily_score function."""
+    
+    def test_empty_input_returns_empty_list(self):
+        """Test with empty user active times list"""
+        result = get_user_daily_score([])
+        assert result == []
+    
+    def test_single_user_basic_calculation(self, mock_db, init_test_data):
+        """Test basic points calculation for single user"""
+        from tally.models.db import User
+        
+        user = User.get(User.id == "user1")
+        user_active_time = UserActiveTime(
+            user=user,
+            date=date(2023, 1, 15),
+            active_seconds=1800  # 30 minutes
+        )
+        
+        result = get_user_daily_score([user_active_time])
+        
+        assert len(result) == 1
+        assert result[0].user.id == "user1"
+        assert result[0].points == 5  # Expected points for 30 minutes
+```

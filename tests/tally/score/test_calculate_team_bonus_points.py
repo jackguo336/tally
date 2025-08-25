@@ -1,4 +1,3 @@
-import pytest
 from tally.actions.score.point_system import calculate_team_bonus_points
 
 

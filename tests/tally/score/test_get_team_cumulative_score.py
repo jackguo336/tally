@@ -1,8 +1,7 @@
 import pytest
 from datetime import date
-from tally.actions.score.team_score import get_team_cumulative_score, TeamDailyScore, TeamCumulativeScore
+from tally.actions.score.team_score import get_team_cumulative_score, TeamDailyScore
 from tally.actions.score.user_score import UserDailyScore
-from tests.tally.mocks.mock_db import mock_db
 from tests.tally.mocks.mock_user import create_user
 from tests.tally.mocks.mock_team import create_team
 

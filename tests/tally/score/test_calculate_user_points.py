@@ -1,5 +1,3 @@
-import pytest
-
 from tally.actions.score.point_system import calculate_user_points
 
 

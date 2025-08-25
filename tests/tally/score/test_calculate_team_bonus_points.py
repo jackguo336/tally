@@ -24,7 +24,7 @@ class TestCalculateTeamBonusPoints:
         # Test single user team
         result = calculate_team_bonus_points(1, 1)
         assert result == 5
-        
+
         # Test larger team
         result = calculate_team_bonus_points(5, 5)
         assert result == 5

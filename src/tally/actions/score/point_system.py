@@ -53,4 +53,8 @@ def calculate_team_bonus_points(active_user_count: int, total_user_count: int) -
     :return: Bonus points for the team.
     """
     bonus_points = 5
-    return bonus_points if total_user_count > 0 and active_user_count == total_user_count else 0
+    return (
+        bonus_points
+        if total_user_count > 0 and active_user_count == total_user_count
+        else 0
+    )

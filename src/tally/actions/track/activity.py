@@ -18,21 +18,45 @@ logger = logging.getLogger(__name__)
 
 
 def get_moving_seconds_from_stats(stats: List[ActivityStatsEntry]) -> int | None:
-    moving_seconds = None
+    """
+    Checks if the stats string contains any one or more of the following elements:
+    - Seconds: "{{seconds}}<abbr class='unit' title='second'>s</abbr>"
+    - Minutes: "{{minutes}}<abbr class='unit' title='minute'>m</abbr>"
+    - Hours: "{{hours}}<abbr class='unit' title='hour'>h</abbr>"
+    If so, extract the values and convert to seconds.
+    """
+
     one_minute_in_seconds = 60
-    moving_time_regex = r"(\d+)\s*<.*>\s*(\d+)\s*<.*>"
-    minutes_group_index = 1
-    seconds_group_index = 2
+    one_hour_in_seconds = 3600
+
+    # Separate regexes for each time unit
+    hour_regex = r"(\d+)\s*<[^>]*title='hour'[^>]*>"
+    minute_regex = r"(\d+)\s*<[^>]*title='minute'[^>]*>"
+    second_regex = r"(\d+)\s*<[^>]*title='second'[^>]*>"
 
     for entry in stats:
-        match = re.search(moving_time_regex, entry.value)
-        if match:
-            moving_seconds = int(
-                match.group(minutes_group_index)
-            ) * one_minute_in_seconds + int(match.group(seconds_group_index))
-            break
+        # Search for each time unit independently
+        hour_match = re.search(hour_regex, entry.value)
+        minute_match = re.search(minute_regex, entry.value)
+        second_match = re.search(second_regex, entry.value)
 
-    return moving_seconds
+        # The stats string isn't a moving time if it doesn't contain hours,
+        # minutes, or seconds
+        if not (hour_match or minute_match or second_match):
+            continue
+
+        hours = int(hour_match.group(1)) if hour_match else 0
+        minutes = int(minute_match.group(1)) if minute_match else 0
+        seconds = int(second_match.group(1)) if second_match else 0
+        
+        moving_seconds = (
+            hours * one_hour_in_seconds + 
+            minutes * one_minute_in_seconds + 
+            seconds
+        )
+        return moving_seconds
+
+    return None
 
 
 def get_activities_from_feed(feed: FeedResponse) -> List[FeedActivity]:

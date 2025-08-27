@@ -15,7 +15,7 @@ def save_activities(activities: List[Activity], config: Config):
         print("No file selected, skipping save")
         return
 
-    with open(file, "w", encoding="utf-8") as f:
+    with open(file, "w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(
             [

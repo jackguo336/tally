@@ -29,7 +29,7 @@ class TestSaveActivities:
         """Test with empty activities list"""
         config = create_config()
         
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as temp_file:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv', newline='') as temp_file:
             temp_filename = temp_file.name
         
         try:
@@ -62,7 +62,7 @@ class TestSaveActivities:
         )
         activity_with_emoji.save(force_insert=True)
         
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as temp_file:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv', newline='') as temp_file:
             temp_filename = temp_file.name
         
         try:
@@ -119,7 +119,7 @@ class TestSaveActivities:
         for activity in activities:
             activity.save(force_insert=True)
         
-        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv') as temp_file:
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv', newline='') as temp_file:
             temp_filename = temp_file.name
         
         try:
@@ -147,3 +147,45 @@ class TestSaveActivities:
         with patch('tally.actions.export.save_activity.prompt_save_file', return_value=None):
             # This should not raise any exception and should print skip message
             save_activities([], config)
+
+    def test_csv_line_endings_cross_platform(self, mock_db, init_test_data):
+        """Test that CSV files have consistent line endings across platforms"""
+        user = init_test_data
+        config = create_config()
+        
+        activity = create_activity(
+            id="activity1",
+            user=user.id,
+            title="Test Activity",
+            workout_type="Run",
+            start_time="2023-01-15T10:00:00+00:00"
+        )
+        activity.save(force_insert=True)
+        
+        with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.csv', newline='') as temp_file:
+            temp_filename = temp_file.name
+        
+        try:
+            with patch('tally.actions.export.save_activity.prompt_save_file', return_value=temp_filename):
+                save_activities([activity], config)
+            
+            # Read file in binary mode to check actual line endings
+            with open(temp_filename, 'rb') as f:
+                content = f.read()
+            
+            # CSV standard (RFC 4180) uses \r\n line endings, which is correct
+            # The newline="" parameter prevents the OS from adding extra line endings
+            assert b'\r\n' in content, "CSV file should contain standard CSV line endings (\\r\\n)"
+            
+            # Check that we don't have double line endings (\r\r\n) which was the Windows issue
+            assert b'\r\r\n' not in content, "CSV file should not contain doubled line endings (\\r\\r\\n)"
+            
+            # Verify content is still readable as CSV
+            with open(temp_filename, 'r', encoding='utf-8', newline='') as f:
+                reader = csv.reader(f)
+                rows = list(reader)
+                assert len(rows) == 2  # Header + 1 data row
+                assert rows[0] == ["link", "user_link", "user", "title", "workout_type", "date", "active_time"]
+        finally:
+            if os.path.exists(temp_filename):
+                os.unlink(temp_filename)

@@ -17,7 +17,7 @@ def save_team_cumulative_score_to_csv(
         print("No file selected, skipping save")
         return
 
-    with open(file, "w") as f:
+    with open(file, "w", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["Team", "Points"])
         for team_cumulative_score in team_cumulative_scores:

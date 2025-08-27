@@ -33,7 +33,7 @@ class ActivityRow(BaseModel):
 
 
 def parse_activity_list(activity_list_path: str) -> List[ActivityRow]:
-    with open(activity_list_path, "r") as file:
+    with open(activity_list_path, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         activity_list = []
         for row in reader:

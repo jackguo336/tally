@@ -26,7 +26,7 @@ class UserRow(BaseModel):
 def parse_user_list(user_list_path: str) -> List[UserRow]:
     skipped_row_count = 0
 
-    with open(user_list_path, "r") as file:
+    with open(user_list_path, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         user_rows = []
         for row in reader:

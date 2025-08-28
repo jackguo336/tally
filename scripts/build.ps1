@@ -10,4 +10,4 @@ if (!(Test-Path "../venv")) {
 pip install -r requirements.txt
 
 # Create an executable
-pyinstaller --name tally src/tally/cli.py
+pyinstaller tally.spec

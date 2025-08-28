@@ -1,5 +1,3 @@
-import tkinter
-from tkinter import filedialog
 from typing import List
 from pydantic import BaseModel
 import csv

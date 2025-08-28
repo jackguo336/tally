@@ -7,6 +7,9 @@ a = Analysis(
     datas=[],
     hiddenimports=[
         'tkinter',
+        'tkinter.filedialog',
+        'tkinter.messagebox',
+        'tkinter.ttk',
     ],
     hookspath=[],
     hooksconfig={},

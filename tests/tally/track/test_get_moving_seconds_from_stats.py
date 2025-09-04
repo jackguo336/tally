@@ -246,14 +246,16 @@ class TestGetMovingSecondsFromStats:
         """Test that partial time formats now match (updated behavior)"""
         partial_cases = [
             ("22<abbr class='unit' title='minute'>m</abbr>", 22 * 60),  # Only minutes
-            ("30<abbr class='unit' title='second'>s</abbr>", 30),  # Only seconds  
+            ("30<abbr class='unit' title='second'>s</abbr>", 30),  # Only seconds
             ("1<abbr class='unit' title='hour'>h</abbr>", 1 * 3600),  # Only hours
         ]
 
         for time_value, expected in partial_cases:
             stats = [ActivityStatsEntry(key="moving_time", value=time_value)]
             result = get_moving_seconds_from_stats(stats)
-            assert result == expected, f"Should match partial format: {time_value}, expected: {expected}, got: {result}"
+            assert (
+                result == expected
+            ), f"Should match partial format: {time_value}, expected: {expected}, got: {result}"
 
     def test_all_three_units_combined(self):
         """Test parsing time with hours, minutes, and seconds all present"""
@@ -264,14 +266,16 @@ class TestGetMovingSecondsFromStats:
             )
         ]
         result = get_moving_seconds_from_stats(stats)
-        expected = 2 * 3600 + 30 * 60 + 45  # 2 hours + 30 minutes + 45 seconds = 9045 seconds
+        expected = (
+            2 * 3600 + 30 * 60 + 45
+        )  # 2 hours + 30 minutes + 45 seconds = 9045 seconds
         assert result == expected
 
     def test_hours_and_seconds_without_minutes(self):
         """Test parsing time with hours and seconds but no minutes"""
         stats = [
             ActivityStatsEntry(
-                key="moving_time", 
+                key="moving_time",
                 value="1<abbr class='unit' title='hour'>h</abbr> 30<abbr class='unit' title='second'>s</abbr>",
             )
         ]

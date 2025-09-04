@@ -103,8 +103,7 @@ def create_feed_response(
 
 
 def get_raw_club_feed() -> str:
-    return (
-        """
+    return """
 {
    "entries":[
       {
@@ -517,4 +516,3 @@ def get_raw_club_feed() -> str:
    }
 }
 """
-    )

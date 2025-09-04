@@ -6,7 +6,7 @@
     {
       "label": "format",
       "type": "shell",
-      "command": "python -m black src tests",
+      "command": "venv/bin/python -m black src tests",
       "problemMatcher": []
     }
   ]

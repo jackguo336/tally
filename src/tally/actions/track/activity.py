@@ -48,11 +48,9 @@ def get_moving_seconds_from_stats(stats: List[ActivityStatsEntry]) -> int | None
         hours = int(hour_match.group(1)) if hour_match else 0
         minutes = int(minute_match.group(1)) if minute_match else 0
         seconds = int(second_match.group(1)) if second_match else 0
-        
+
         moving_seconds = (
-            hours * one_hour_in_seconds + 
-            minutes * one_minute_in_seconds + 
-            seconds
+            hours * one_hour_in_seconds + minutes * one_minute_in_seconds + seconds
         )
         return moving_seconds
 

@@ -5,6 +5,7 @@ black==25.1.0
 certifi==2025.6.15
 charset-normalizer==3.4.2
 click==8.2.1
+coverage==7.10.6
 dotenv==0.9.9
 h11==0.16.0
 idna==3.10
@@ -26,6 +27,7 @@ pyinstaller==6.14.2
 pyinstaller-hooks-contrib==2025.5
 PySocks==1.7.1
 pytest==8.4.1
+pytest-cov==6.2.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1
 pytz==2025.2

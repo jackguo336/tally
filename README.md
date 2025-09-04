@@ -104,12 +104,13 @@ A team is awareded 5 additional points for a given day if all users in the team 
 
 ### Setup
 
-1. Cloen this repository
+1. Clone this repository
 2. Create a virtual environment with `python -m venv venv`
 3. Activate the virtual environment with `source venv/bin/activate`
 4. Install the dependencies with `pip install -r requirements.txt`
 5. Create an [editable install](https://setuptools.pypa.io/en/latest/userguide/development_mode.html) of the package with `pip install -e .`
-6. Run the tool with `python -m tally`
+6. Install [pre-commit](https://pre-commit.com/) hooks with `pre-commit install`
+7. Run the tool with `python -m tally`
 
 ### Installing from Source
 

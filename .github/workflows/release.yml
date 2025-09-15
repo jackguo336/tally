@@ -109,6 +109,7 @@ jobs:
         with:
           name: tally-macos
           path: ./dist/tally-macos-${{ needs.get-version.outputs.new_version }}.zip
+          retention-days: 1
 
   build-windows:
     needs: get-version
@@ -135,6 +136,7 @@ jobs:
         with:
           name: tally-windows
           path: ./dist/tally-windows-${{ needs.get-version.outputs.new_version }}.zip
+          retention-days: 1
 
   create-release:
     needs: [get-version, build-macos, build-windows]
@@ -164,3 +166,17 @@ jobs:
           files: |
             ./artifacts/tally-macos-${{ needs.get-version.outputs.new_version }}.zip
             ./artifacts/tally-windows-${{ needs.get-version.outputs.new_version }}.zip
+
+  cleanup-artifacts:
+    needs: [create-release]
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Delete build artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            tally-macos
+            tally-windows
+          useGlob: false
+          failOnError: false

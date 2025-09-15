@@ -1,0 +1,166 @@
+name: Create Draft Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'minor'
+        type: choice
+        options:
+          - minor
+          - major
+          - patch
+
+permissions:
+  contents: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.next_version.outputs.version_tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current tag version
+        id: current_version
+        run: |
+          # Get the latest tag
+          latest_tag=$(git tag --sort=-version:refname | head -1)
+          echo "Latest tag: $latest_tag"
+          
+          # Extract version numbers
+          if [[ $latest_tag =~ v([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+            major=${BASH_REMATCH[1]}
+            minor=${BASH_REMATCH[2]}
+            patch=${BASH_REMATCH[3]}
+          else
+            # Default to 0.0.0 if no valid tag found
+            major=0
+            minor=0
+            patch=0
+          fi
+
+          echo "version=${major}.${minor}.${patch}" >> $GITHUB_OUTPUT
+          echo "major=$major" >> $GITHUB_OUTPUT
+          echo "minor=$minor" >> $GITHUB_OUTPUT
+          echo "patch=$patch" >> $GITHUB_OUTPUT
+
+      - name: Determine next version for release
+        id: next_version
+        run: |
+          current_version=${{ steps.current_version.outputs.version }}
+          current_major=${{ steps.current_version.outputs.major }}
+          current_minor=${{ steps.current_version.outputs.minor }}
+          current_patch=${{ steps.current_version.outputs.patch }}
+          
+          case "${{ github.event.inputs.version_type }}" in
+            major)
+              next_major=$((current_major + 1))
+              next_minor=0
+              next_patch=0
+              ;;
+            minor)
+              next_major=$current_major
+              next_minor=$((current_minor + 1))
+              next_patch=0
+              ;;
+            patch)
+              next_major=$current_major
+              next_minor=$current_minor
+              next_patch=$((current_patch + 1))
+              ;;
+          esac
+          
+          next_version="${next_major}.${next_minor}.${next_patch}"
+          echo "Incrementing version: $current_version -> $next_version (type: ${{ github.event.inputs.version_type }})"
+          echo "version_tag=v${next_version}" >> $GITHUB_OUTPUT
+
+  build-macos:
+    needs: get-version
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Make build script executable
+        run: chmod +x scripts/build.sh
+
+      - name: Build macOS executable
+        run: ./scripts/build.sh
+
+      - name: Create macOS zip archive
+        run: |
+          cd dist
+          zip -r tally-macos-${{ needs.get-version.outputs.new_version }}.zip tally
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tally-macos
+          path: ./dist/tally-macos-${{ needs.get-version.outputs.new_version }}.zip
+
+  build-windows:
+    needs: get-version
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Build Windows executable
+        run: .\scripts\build.ps1
+
+      - name: Create Windows zip archive
+        run: |
+          cd dist
+          Compress-Archive -Path tally.exe -DestinationPath tally-windows-${{ needs.get-version.outputs.new_version }}.zip
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tally-windows
+          path: ./dist/tally-windows-${{ needs.get-version.outputs.new_version }}.zip
+
+  create-release:
+    needs: [get-version, build-macos, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tally-macos
+          path: ./artifacts
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tally-windows
+          path: ./artifacts
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.get-version.outputs.new_version }}
+          name: ${{ needs.get-version.outputs.new_version }}
+          draft: true
+          files: |
+            ./artifacts/tally-macos-${{ needs.get-version.outputs.new_version }}.zip
+            ./artifacts/tally-windows-${{ needs.get-version.outputs.new_version }}.zip

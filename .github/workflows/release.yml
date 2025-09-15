@@ -102,7 +102,9 @@ jobs:
       - name: Create macOS zip archive
         run: |
           cd dist
-          zip -r tally-macos-${{ needs.get-version.outputs.new_version }}.zip tally
+          mkdir -p tally-package/tally
+          cp tally tally-package/tally/
+          zip -r tally-macos-${{ needs.get-version.outputs.new_version }}.zip tally-package/tally
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
@@ -129,7 +131,9 @@ jobs:
       - name: Create Windows zip archive
         run: |
           cd dist
-          Compress-Archive -Path tally.exe -DestinationPath tally-windows-${{ needs.get-version.outputs.new_version }}.zip
+          New-Item -ItemType Directory -Path "tally-package\tally" -Force
+          Copy-Item "tally.exe" -Destination "tally-package\tally\"
+          Compress-Archive -Path "tally-package\tally" -DestinationPath "tally-windows-${{ needs.get-version.outputs.new_version }}.zip"
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4

@@ -92,12 +92,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
+          cache: 'pip'
+    
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Make build script executable
-        run: chmod +x scripts/build.sh
-
-      - name: Build macOS executable
-        run: ./scripts/build.sh
+      - name: Create executable
+        run: pyinstaller tally.spec
 
       - name: Create macOS zip archive
         run: |
@@ -125,9 +128,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-
-      - name: Build Windows executable
-        run: .\scripts\build.ps1
+          cache: 'pip'
+    
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Create executable
+        run: pyinstaller tally.spec
 
       - name: Create Windows zip archive
         run: |

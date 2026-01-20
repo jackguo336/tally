@@ -1,5 +1,6 @@
 import logging
 import json
+from pydantic import ValidationError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -45,10 +46,15 @@ class StravaService:
                     "cursor": cursor,
                 },
             )
-        except Exception as e:
-            raise Exception(f"Failed to get activities: {e}")
 
-        return FeedResponse.model_validate(feed_json)
+            return FeedResponse.model_validate(feed_json)
+        except ValidationError:
+            logger.debug(
+                f"Failed to parse feed response for club {club_id}:\n{feed_json}"
+            )
+            raise Exception(f"Failed to parse feed response for club {club_id}")
+        except Exception:
+            raise Exception(f"Failed to get activities for club {club_id}")
 
     def _get_json_content(self, url: str, params: dict) -> str:
         # Ensure params that are None are not included in the URL

@@ -2,6 +2,7 @@ from typing import List
 import logging
 import questionary
 from pytz import common_timezones
+import traceback
 
 from tally.utils.date import prompt_date
 from tally.actions.initialize.user_list import (
@@ -108,8 +109,8 @@ def initialize():
 
     try:
         user_list = parse_user_list(user_list_path)
-    except Exception as e:
-        print(f"Failed to read user table\n{e}")
+    except Exception:
+        logger.error(f"Failed to read user table:\n{traceback.format_exc()}")
         return
 
     team_ids = create_teams(user_list)

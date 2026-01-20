@@ -2,6 +2,7 @@ import questionary
 import logging
 import sys
 from pathlib import Path
+import traceback
 
 from tally.actions.initialize.initialize import initialize
 from tally.actions.reset.reset import reset
@@ -49,25 +50,40 @@ def prompt_action() -> str:
     )
 
 
+def prompt_exit_after_failure(action: str) -> bool:
+    return questionary.confirm(
+        "Failed to complete action. See logs for details. Exit the application now?",
+        default=False,
+    ).ask()
+
+
 def app():
     configure_logging()
+    logger = logging.getLogger(__name__)
 
-    while True:
+    should_exit = False
+    while not should_exit:
         action = prompt_action()
-        if action == actions["initialize"]:
-            initialize()
-        elif action == actions["track"]:
-            track()
-        elif action == actions["score"]:
-            score()
-        elif action == actions["reset"]:
-            reset()
-        elif action == actions["export"]:
-            export()
-        elif action == actions["load"]:
-            load()
-        elif action == actions["exit"] or not action:
-            break
+        try:
+            if action == actions["initialize"]:
+                initialize()
+            elif action == actions["track"]:
+                track()
+            elif action == actions["score"]:
+                score()
+            elif action == actions["reset"]:
+                reset()
+            elif action == actions["export"]:
+                export()
+            elif action == actions["load"]:
+                load()
+            elif action == actions["exit"] or not action:
+                should_exit = True
+        except Exception:
+            logger.debug(
+                f"Failed to complete action {action}:\n{traceback.format_exc()}"
+            )
+            should_exit = prompt_exit_after_failure(action)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,10 @@
 from typing import List
 from pydantic import BaseModel
 import csv
+import logging
+import traceback
+
+logger = logging.getLogger(__name__)
 
 
 class UserRow(BaseModel):
@@ -27,15 +31,27 @@ def parse_user_list(user_list_path: str) -> List[UserRow]:
     with open(user_list_path, "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         user_rows = []
-        for row in reader:
-            user_row = UserRow(**row)
-            if user_row.is_incomplete():
-                print(f"Skipping incomplete row {row}")
+        for idx, row in enumerate(reader):
+            try:
+                user_row = UserRow(**row)
+            except Exception:
+                print(f"Failed to read entry at row {idx + 1}")
+                logger.debug(
+                    f"Failed to read entry {row} at row {idx + 1}:\n{traceback.format_exc()}"
+                )
                 skipped_row_count += 1
                 continue
+
+            if user_row.is_incomplete():
+                print(f"Skipping incomplete entry at row {idx + 1}")
+                logger.debug(f"Skipped incomplete entry {row} at position {idx + 1}")
+                skipped_row_count += 1
+                continue
+
             user_rows.append(user_row)
 
         print(
-            f"Parsed {len(user_rows)} user rows. Skipped {skipped_row_count} incomplete rows."
+            f"Parsed {len(user_rows)} user rows. Skipped {skipped_row_count} incomplete or "
+            "incorrectly formatted rows (see logs for details)."
         )
         return user_rows

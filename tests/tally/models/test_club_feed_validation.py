@@ -1,7 +1,10 @@
 import pytest
 import json
-from tally.models.validation.club_feed import FeedResponse
-from tests.tally.mocks.mock_club_feed import get_raw_club_feed
+from tally.models.validation.club_feed import FeedResponse, FeedEntryMultipleActivities
+from tests.tally.mocks.mock_club_feed import (
+    get_raw_club_feed,
+    get_raw_club_feed_with_variant_b,
+)
 
 
 class TestClubFeedValidation:
@@ -99,3 +102,67 @@ class TestClubFeedValidation:
         feed_response = FeedResponse.model_validate(valid_empty_data)
         assert len(feed_response.entries) == 0
         assert feed_response.pagination.hasMore is False
+
+    def test_feed_response_validates_variant_b_format(self):
+        """Test that FeedResponse.model_validate works with variant B format (snake_case fields)"""
+        # Get the raw club feed JSON string with variant B format
+        raw_feed_json = get_raw_club_feed_with_variant_b()
+
+        # Parse the JSON string to a dictionary
+        raw_feed_data = json.loads(raw_feed_json)
+
+        # Validate using Pydantic model
+        feed_response = FeedResponse.model_validate(raw_feed_data)
+
+        # Verify the structure was parsed correctly
+        assert isinstance(feed_response, FeedResponse)
+        assert hasattr(feed_response, "entries")
+        assert hasattr(feed_response, "pagination")
+
+        # Verify pagination
+        assert feed_response.pagination.hasMore is False
+
+        # Verify entries
+        assert len(feed_response.entries) == 1
+
+        # Check that the entry is a FeedEntryMultipleActivities
+        entry = feed_response.entries[0]
+        assert isinstance(entry, FeedEntryMultipleActivities)
+        assert hasattr(entry, "rowData")
+        assert hasattr(entry, "cursorData")
+
+        # Verify cursorData
+        assert entry.cursorData.updated_at == 1768163126
+
+        # Verify activities in rowData
+        assert len(entry.rowData.activities) == 2
+
+        # Check first activity (Hike)
+        first_activity = entry.rowData.activities[0]
+        assert first_activity.id == "888000004"
+        assert first_activity.activityName == "Afternoon Hike"
+        assert first_activity.type == "Hike"
+        assert first_activity.athlete.athleteId == "777000004"
+        assert first_activity.athlete.athleteName == "Nicky TestUser"
+        assert first_activity.elapsedTime == 4844
+        assert first_activity.startDate == "2026-01-11T19:03:34Z"
+        assert len(first_activity.stats) == 6
+
+        # Check second activity (Walk)
+        second_activity = entry.rowData.activities[1]
+        assert second_activity.id == "888000005"
+        assert second_activity.activityName == "Lunch Walk"
+        assert second_activity.type == "Walk"
+        assert second_activity.athlete.athleteId == "777000004"
+        assert second_activity.athlete.athleteName == "Nicky TestUser"
+        assert second_activity.elapsedTime == 4988
+        assert second_activity.startDate == "2026-01-11T19:02:18Z"
+        assert len(second_activity.stats) == 6
+
+        # Verify stats are parsed correctly
+        first_activity_stats = first_activity.stats
+        distance_stat = next(
+            (stat for stat in first_activity_stats if stat.key == "stat_one"), None
+        )
+        assert distance_stat is not None
+        assert "2.55" in distance_stat.value

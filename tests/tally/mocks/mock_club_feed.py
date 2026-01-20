@@ -516,3 +516,118 @@ def get_raw_club_feed() -> str:
    }
 }
 """
+
+
+def get_raw_club_feed_with_variant_b() -> str:
+    """Returns a mock club feed with variant B format (snake_case fields in FeedEntryMultipleActivities)"""
+    return """
+{
+   "entries":[
+      {
+         "timeAndLocation":{
+            "timestampFormat":"date_at_time",
+            "displayDateAtTime":"January 11, 2026",
+            "displayDate":"January 11, 2026",
+            "location":"Test Location, USA"
+         },
+         "rowData":{
+            "template_name":"group_activity",
+            "entity":"GroupActivity",
+            "feed_entry_type":2,
+            "updated_at":"2026-01-11T20:25:26+00:00",
+            "rank":1768163126.0,
+            "activities":[
+               {
+                  "entity":"Activity",
+                  "feed_entry_type":1,
+                  "entity_id":888000004,
+                  "activity_id":888000004,
+                  "athlete_id":777000004,
+                  "athlete_name":"Nicky TestUser",
+                  "name":"Afternoon Hike",
+                  "start_date":"2026-01-11T19:03:34Z",
+                  "elapsed_time":4844,
+                  "type":"Hike",
+                  "stats":[
+                     {
+                        "key":"stat_one",
+                        "value":"2.55<abbr class='unit' title='kilometers'> km</abbr>"
+                     },
+                     {
+                        "key":"stat_one_subtitle",
+                        "value":"Distance"
+                     },
+                     {
+                        "key":"stat_two",
+                        "value":"113<abbr class='unit' title='meters'> m</abbr>"
+                     },
+                     {
+                        "key":"stat_two_subtitle",
+                        "value":"Elev Gain"
+                     },
+                     {
+                        "key":"stat_three",
+                        "value":"50<abbr class='unit' title='minute'>m</abbr> 38<abbr class='unit' title='second'>s</abbr>"
+                     },
+                     {
+                        "key":"stat_three_subtitle",
+                        "value":"Time"
+                     }
+                  ]
+               },
+               {
+                  "entity":"Activity",
+                  "feed_entry_type":1,
+                  "entity_id":888000005,
+                  "activity_id":888000005,
+                  "athlete_id":777000004,
+                  "athlete_name":"Nicky TestUser",
+                  "name":"Lunch Walk",
+                  "start_date":"2026-01-11T19:02:18Z",
+                  "elapsed_time":4988,
+                  "type":"Walk",
+                  "stats":[
+                     {
+                        "key":"stat_one",
+                        "value":"2.86<abbr class='unit' title='kilometers'> km</abbr>"
+                     },
+                     {
+                        "key":"stat_one_subtitle",
+                        "value":"Distance"
+                     },
+                     {
+                        "key":"stat_two",
+                        "value":"4,226"
+                     },
+                     {
+                        "key":"stat_two_subtitle",
+                        "value":"Steps"
+                     },
+                     {
+                        "key":"stat_three",
+                        "value":"53<abbr class='unit' title='minute'>m</abbr> 1<abbr class='unit' title='second'>s</abbr>"
+                     },
+                     {
+                        "key":"stat_three_subtitle",
+                        "value":"Time"
+                     }
+                  ]
+               }
+            ],
+            "title":"Group Activity",
+            "start_date_local":"2026-01-11T12:03:34Z",
+            "total_num_athletes":1
+         },
+         "entity":"GroupActivity",
+         "cursorData":{
+            "updated_at":1768163126,
+            "rank":1768163126.0
+         },
+         "callbacks":null
+      }
+   ],
+   "pagination":{
+      "hasMore":false
+   }
+}
+"""
